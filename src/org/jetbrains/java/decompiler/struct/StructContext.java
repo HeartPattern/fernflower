@@ -139,7 +139,7 @@ public class StructContext {
 
         String name = entry.getName();
         if (!entry.isDirectory()) {
-          if (name.endsWith(".class")) {
+          if (name.endsWith(".class") && !name.contains("module-info")) {
             byte[] bytes = InterpreterUtil.getBytes(archive, entry);
             StructClass cl = new StructClass(bytes, isOwn, loader);
             classes.put(cl.qualifiedName, cl);
