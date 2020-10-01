@@ -14,6 +14,7 @@ import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
+import org.jetbrains.java.decompiler.struct.gen.VarType;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -54,7 +55,13 @@ public class VarDefinitionHelper {
     int varindex = 0;
     for (int i = 0; i < paramcount; i++) {
       implDefVars.add(varindex);
-      varproc.setVarName(new VarVersionPair(varindex, 0), vc.getFreeName(varindex));
+      if(thisvar && i == 0){
+        varproc.setVarName(new VarVersionPair(varindex, 0), vc.getFreeName(varindex));
+      } else if(thisvar){
+        varproc.setVarName(new VarVersionPair(varindex, 0), vc.getFreeName(md.params[i - 1]));
+      } else{
+        varproc.setVarName(new VarVersionPair(varindex, 0), vc.getFreeName(md.params[i]));
+      }
 
       if (thisvar) {
         if (i == 0) {
@@ -95,7 +102,7 @@ public class VarDefinitionHelper {
       if (lstVars != null) {
         for (VarExprent var : lstVars) {
           implDefVars.add(var.getIndex());
-          varproc.setVarName(new VarVersionPair(var), vc.getFreeName(var.getIndex()));
+          varproc.setVarName(new VarVersionPair(var), vc.getFreeName(var.getVarType()));
           var.setDefinition(true);
         }
       }
@@ -119,7 +126,8 @@ public class VarDefinitionHelper {
         continue;
       }
 
-      varproc.setVarName(new VarVersionPair(index.intValue(), 0), vc.getFreeName(index));
+      VarVersionPair vvp = new VarVersionPair(index.intValue(), 0);
+      varproc.setVarName(vvp, vc.getFreeName(varproc.getVarType(vvp)));
 
       // special case for
       if (stat.type == Statement.TYPE_DO) {
