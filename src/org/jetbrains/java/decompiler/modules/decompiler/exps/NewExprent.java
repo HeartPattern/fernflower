@@ -466,6 +466,9 @@ public class NewExprent extends Exprent {
     this.directArrayInit = directArrayInit;
   }
 
+  public boolean isVarArgParam(){
+    return this.isVarArgParam;
+  }
   public void setVarArgParam(boolean isVarArgParam) {
     this.isVarArgParam = isVarArgParam;
   }

@@ -885,6 +885,9 @@ public class ExprProcessor implements CodeConstants {
       (castNull && rightType.type == CodeConstants.TYPE_NULL && !UNDEFINED_TYPE_STRING.equals(getTypeName(leftType))) ||
       (castNarrowing && isIntConstant(exprent) && isNarrowedIntType(leftType));
 
+    if(exprent instanceof NewExprent && ((NewExprent) exprent).isVarArgParam())
+      cast = false;
+
     boolean quote = cast && exprent.getPrecedence() >= FunctionExprent.getPrecedence(FunctionExprent.FUNCTION_CAST);
 
     // cast instead to 'byte' / 'short' when int constant is used as a value for 'Byte' / 'Short'
